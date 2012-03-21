@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animals>
+<node nodeid = "1">
+  <info>Does it fly?</info>
+  <yes  nodeid="2" />
+  <no   nodeid="3" />
+</node> 
+<node nodeid="2">
+  <answer>"Duck"</answer>
+</node>
+<node nodeid="3">
+  <answer>"Bat"</answer>
+</node>
+<node nodeid="3">
+  <info>Does it live in water?</info>
+  <yes nodeid="4" />
+  <no  nodeid="5" />
+</node>
+<node nodeid="4">
+  <answer>"This is a whale"</answer>
+</node>
+<node nodeid="5">
+  <answer>"This ia moose"</answer>
+</node>
+</animals>
