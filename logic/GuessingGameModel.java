@@ -1,7 +1,7 @@
 package logic;
 import java.io.File;
 import java.io.IOException;
-
+import java.lang.IllegalArgumentException;
 import javax.xml.parsers.DocumentBuilder; 
 import javax.xml.parsers.DocumentBuilderFactory; 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,6 +12,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 
 public class GuessingGameModel 
 {
@@ -20,7 +23,7 @@ public class GuessingGameModel
 
 	public GuessingGameModel()
 	{
-		buildFromScratch();	
+		buildFromFile();
 	}
 	
 	private void buildFromFile()
@@ -30,19 +33,17 @@ public class GuessingGameModel
 			
 		//read the XML file using DOM parser. DOM parser loads the file into the memory 
 		//making an object model of it. 
-		File file = new File ("C:/Users/Tito/workspace/TwentyQuestions/src/gui/data.xml"); 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(file);
-	    NodeList list = doc.getElementsByTagName("node");
-	    
+		File file = new File ("/Users/catalino/git/TwentyQuestions/logic/data.xml"); 
+		XMLReader parser = new SAXParser();
+		parser.parse("/Users/catalino/git/TwentyQuestions/logic/data.xml");
+		
 		}
 		catch(IOException e)
 		{
 			// Do stuff when you encounter an IO Exception.
 			System.out.println("IO Exception thrown! Look for data file in the right path");
 		}
-		catch(ParserConfigurationException p)
+		catch(IllegalArgumentException i)
 		{
 			//Do stuff when the parser is configured incorrectly
 		}
