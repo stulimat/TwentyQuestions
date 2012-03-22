@@ -11,6 +11,10 @@ private TreeNode root;
 		this.root = new TreeNode();
 	}
 	
+	public YesNoTree(TreeNode root)
+	{
+		this.root = root;
+	}
 	public void insertInfo(TreeNode node, String info)
 	{
 	  node.setInfo(info);
@@ -61,6 +65,11 @@ private TreeNode root;
 		{
 			return false;
 		}
+	}
+	
+	public TreeNode getCurrentNode()
+	{
+	  return this.root;
 	}
 	
 }

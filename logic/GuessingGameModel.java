@@ -16,11 +16,11 @@ import org.xml.sax.SAXException;
 public class GuessingGameModel 
 {
  
-	TreeNode root;
-
+    YesNoTree tree;
 	public GuessingGameModel()
 	{
-		buildFromScratch();	
+		buildFromScratch();
+		this.tree = buildFromScratch();
 	}
 	
 	private void buildFromFile()
@@ -53,15 +53,43 @@ public class GuessingGameModel
 		
 	}
 	
-	private void buildFromScratch()
+	private YesNoTree buildFromScratch()
 	{
+		TreeNode root;
 		root = new TreeNode();
 		root.setInfo("Does it fly?");
 		root.setYesNode(new TreeNode("Duck"));
 		root.setNoNode(new TreeNode("Does it live in Water?",new TreeNode("This is a whale"),new TreeNode("This is a moose")));
+		return new YesNoTree(root);
 	}
-
-	//
+	
+	//reinitializes game when user presses restart 
+	public void reInitialize()
+	{
+		
+		this.tree = buildFromScratch();
+		
+	}
+	
+	public void yesSelection()
+	{
+		this.tree.moveYesNode();
+	}
+	
+	public void noSelection()
+	{
+		this.tree.moveNoNode();
+	}
+	
+	public boolean isQuestion()
+	{
+		return !this.tree.getCurrentNode().isLeaf();
+	}
+	
+	public String updateInfo()
+	{
+		return this.tree.getCurrentNode().getInfo();
+	}
 	 
 	
 	
