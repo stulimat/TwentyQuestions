@@ -2,4 +2,4 @@
 .classpath
 .project
 java.policy.applet
-.class
+*.class

@@ -3,16 +3,12 @@ package logic;
 public class YesNoTree 
 {
 
-private TreeNode root;
+    private TreeNode root;
 
 
 	public YesNoTree()
 	{
 		this.root = new TreeNode();
-	}
-	public YesNoTree(TreeNode root)
-	{
-		this.root = root;
 	}
 	
 	public YesNoTree(TreeNode root)
