@@ -1,8 +1,14 @@
 package gui;
 import javax.swing.*;
+import java.awt.event.*;
 import java.awt.*; 
+import java.awt.event.ActionEvent;
+import logic.GuessingGameModel;
+import logic.YesNoTree;
+import logic.TreeNode;
 
-public class GuessingGameGUI extends JPanel{
+public class GuessingGameGUI extends JPanel implements ActionListener {
+	
      //Main Control Panels 
 	 JPanel displayPanel;
      JPanel mainPanel;
@@ -15,11 +21,14 @@ public class GuessingGameGUI extends JPanel{
      JLabel answerLabel = new JLabel("Answer Goes Here");
      JLabel questionText = new JLabel("Question:");
      JLabel answerText = new JLabel("I think your animal is a :");
+     GuessingGameModel model;     
      
-     public GuessingGameGUI()
+     public GuessingGameGUI(GuessingGameModel model)
      {
+    	 this.model = model;
     	 //Initialize Panels
     	 initPanels();
+    	 this.questionLabel.setText(model.updateInfo());
      }
      
      private void initPanels()
@@ -54,9 +63,13 @@ public class GuessingGameGUI extends JPanel{
     	 this.controlPanel.setLayout(new FlowLayout());
     	 this.controlPanel.setPreferredSize(new Dimension(200,600));
     	 this.controlPanel.add(newGameButton);
+    	 newGameButton.addActionListener(this);
     	 this.controlPanel.add(yesButton);
-    	 this.controlPanel.add(noButton); 
+    	 yesButton.addActionListener(this);
+    	 this.controlPanel.add(noButton);
+    	 noButton.addActionListener(this);
     	 this.controlPanel.add(myAnimalButton);
+    	 myAnimalButton.addActionListener(this);
 
     	
      }
@@ -74,4 +87,44 @@ public class GuessingGameGUI extends JPanel{
      {
     	return this.mainPanel;  
      }
+     
+     
+     public void questionUpdater()
+     {
+    	 if (model.isQuestion()== true)
+    	 {
+    		 questionLabel.setText(model.updateInfo());
+    		 
+    	 }
+    	 
+     }
+     
+     public void actionPerformed(ActionEvent e)
+ 	{
+    	 
+    	 if(e.getSource() == newGameButton)
+    	 {
+    	  //Do stuff when user presses the new button.
+    		  model.reInitialize();
+    	 }
+    	 
+    	 if (e.getSource() == yesButton)
+    	 {
+    		 model.yesSelection();
+    		 if(model.isQuestion())
+    		 {
+    		   this.questionLabel.setText(model.updateInfo());
+    		 }
+    		 else
+    		 {
+    		   this.answerLabel.setText(model.updateInfo());
+    		 }
+    	 }
+    	 if (e.getSource() == noButton)
+    	 {
+    		 model.noSelection();
+    	 }
+    	 
+ 	}
+     
 }
