@@ -23,37 +23,149 @@ public class GuessingGameModel
 	public GuessingGameModel()
 	{
 		buildFromFile();
-		buildFromScratch();
-		this.tree = buildFromScratch();
+	//	buildFromScratch();
+	//	this.tree = buildFromScratch();
 	}
 
 	private void buildFromFile()
 	{
-		try
-		{
 
 		//read the XML file using DOM parser. DOM parser loads the file into the memory
 		//making an object model of it.
-		File file = new File ("/Users/catalino/git/TwentyQuestions/logic/data.xml");
-		XMLReader parser = new SAXParser();
-		parser.parse("/Users/catalino/git/TwentyQuestions/logic/data.xml");
-
-		}
-		catch(IOException e)
-		{
-			// Do stuff when you encounter an IO Exception.
-			System.out.println("IO Exception thrown! Look for data file in the right path");
-		}
-		catch(IllegalArgumentException i)
-		{
-			//Do stuff when the parser is configured incorrectly
-		}
-		catch(SAXException s)
-		{
-
-		}
+		this.tree = readXMLAnimalsFile("/Users/catalino/git/TwentyQuestions/logic/data.xml");
+        this.tree.getCurrentNode().getInfo().toString();
 
 	}
+	 /**
+	    * Parses XML file.
+	    * @return expression YesNoTree corresponding to file.
+	    **/
+	   public static YesNoTree readXMLAnimalsFile( String file )
+	   {
+	     return readXMLAnimalsFile( new File( file ) );
+	   }
+
+	   /**
+	    * Parses XML file
+	    * @return expression YesNoTree corresponding to file.
+	    **/
+	   public static YesNoTree readXMLAnimalsFile( File file )
+	   {
+	      DocumentBuilderFactory factory =
+	         DocumentBuilderFactory.newInstance();
+	      
+	      try 
+	      {
+	         DocumentBuilder builder = factory.newDocumentBuilder();
+	         Document document = builder.parse( file );
+
+	         return parseTree( document );	    
+	         
+	      } 
+	      catch (SAXException sxe) 
+	      {
+	         // Error generated during parsing)
+	         Exception  x = sxe;
+	         if (sxe.getException() != null)
+	            x = sxe.getException();
+	         x.printStackTrace();         
+	      } 
+	      catch (ParserConfigurationException pce) 
+	      {
+	         // Parser with specified options can't be built
+	         pce.printStackTrace();
+	      }   
+	      catch (IOException ioe) 
+	      {
+	         // I/O error
+	         ioe.printStackTrace();
+	      }
+	      
+	      return null;
+	   }
+	   
+	   /**
+	    * Parses XML Document. 
+	    * @return parsed YesNoTree.
+	    **/
+	   private static YesNoTree parseTree( Document document )
+	   {
+	     YesNoTree tree = new YesNoTree();
+
+	     // parse root
+	     Element root = (Element)document.getDocumentElement();
+
+	     tree = new YesNoTree( parseExprNode( root ) );
+
+	     return tree;
+	   }
+	   
+	  /**
+	   * Parses expr element.
+	   * @return TreeNode represented by element.
+	   **/
+	  private static TreeNode parseExprNode( Element element )
+	  {  
+	      // get children
+		  if(element.hasChildNodes())
+		  {
+	        NodeList children = element.getChildNodes();
+	        // iterate through, looking for operator and two operands
+	        // NOTE: operand order does not matter because operators are
+	        // commutative
+	        String text="";
+	        TreeNode yesAnswerNode = null;
+	        TreeNode noAnswerNode = null;
+	        Element currentElt;
+
+	        for ( int i = 0; i < children.getLength(); i++ )
+	        {
+	          // if not text node
+	          if ( children.item(i) instanceof Element )
+	          {
+	            currentElt = (Element)children.item(i);
+	            // test tag name 
+	            // if question
+	            if ( currentElt.getTagName().equals( "question" ) )
+	            {
+	              text = currentElt.getAttribute( "value" );
+	            }
+	            else if(currentElt.getTagName().equals("answer"))
+	            {
+	        	  if(currentElt.getAttribute("value").equals("yes"))
+	        	  {
+	        	    yesAnswerNode = parseExprNode(currentElt);
+	        	  }
+	        	  if(currentElt.getAttribute("value").equals("no"));
+	        	  {
+	        		//Set the "No" Answer Node by parsing farther down the tree.
+	                noAnswerNode = parseExprNode(currentElt);
+	        	  }
+	            }
+	            else if(currentElt.getTagName().equals("node"))
+	            {
+	              //Go one node deeper.
+	        	  return parseExprNode(currentElt);
+	            }
+	            else if(currentElt.getTagName().equals("statement"))
+	  		    {
+	            	//Return the statement only and back out of the recursive calls.
+	  		        return new TreeNode(currentElt.getAttribute("value"));
+	  		    }
+	            
+	         
+			 }
+	        }
+
+	      // create node
+	      TreeNode exprNode = new TreeNode(text);
+	      // set left and right children; arbitrary order
+	      exprNode.setNoNode( noAnswerNode );
+	      exprNode.setYesNode( yesAnswerNode );
+	      return exprNode;
+		}
+		return new TreeNode();
+	  }
 
 	private YesNoTree buildFromScratch()
 	{

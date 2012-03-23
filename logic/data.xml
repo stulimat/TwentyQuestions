@@ -1,25 +1,23 @@
-
-<animals>
-<node nodeid = "1">
-  <info>Does it fly?</info>
-  <yes  nodeid="2" />
-  <no   nodeid="3" />
-</node> 
-<node nodeid="2">
-  <answer>"Duck"</answer>
+<node type="question">
+    <question value = "Does it eat Fruit?" />
+    <answer value="yes">
+      <node type="question">
+        <question value = "Does it have feathers?" />
+        <answer value="yes">
+          <node type="statement">
+            <statement value="This is a duck."/>
+          </node>
+        </answer>
+        <answer value="no">
+          <node type="statement">
+            <statement value="This is a bat" />
+          </node>
+        </answer>
+      </node>
+    </answer>
+    <answer value="no">
+      <node type="statement">
+        <statement value="This is a moose" />
+      </node>
+    </answer>
 </node>
-<node nodeid="3">
-  <answer>"Bat"</answer>
-</node>
-<node nodeid="3">
-  <info>Does it live in water?</info>
-  <yes nodeid="4" />
-  <no  nodeid="5" />
-</node>
-<node nodeid="4">
-  <answer>"This is a whale"</answer>
-</node>
-<node nodeid="5">
-  <answer>"This ia moose"</answer>
-</node>
-</animals>
