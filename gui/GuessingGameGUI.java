@@ -21,6 +21,7 @@ public class GuessingGameGUI extends JPanel implements ActionListener {
      JLabel answerLabel = new JLabel("Answer Goes Here");
      JLabel questionText = new JLabel("Question:");
      JLabel answerText = new JLabel("I think your animal is a :");
+     JButton wrongGuess = new JButton("Wrong animal!");
      GuessingGameModel model;     
      
      public GuessingGameGUI(GuessingGameModel model)
@@ -70,8 +71,10 @@ public class GuessingGameGUI extends JPanel implements ActionListener {
     	 noButton.addActionListener(this);
     	 this.controlPanel.add(myAnimalButton);
     	 myAnimalButton.addActionListener(this);
-
-    	
+    	 this.controlPanel.add(wrongGuess);
+    	 wrongGuess.addActionListener(this);
+    	 myAnimalButton.setEnabled(false);
+    	 wrongGuess.setEnabled(false);
      }
      
      private void setupMainPanel()
@@ -99,9 +102,27 @@ public class GuessingGameGUI extends JPanel implements ActionListener {
     	 
      }
      
+     private void checkIfEndGame()
+     {
+    	 if(!model.isQuestion())
+    	 {
+    		 this.yesButton.setEnabled(false);
+    		 this.noButton.setEnabled(false);
+    		 this.wrongGuess.setEnabled(true);
+    		 this.myAnimalButton.setEnabled(true);
+    	 }
+     }
+     
+     private void resetButtons()
+     {
+    	 this.yesButton.setEnabled(true);
+		 this.noButton.setEnabled(true);
+		 this.wrongGuess.setEnabled(false);
+		 this.myAnimalButton.setEnabled(false);
+     }
      public void actionPerformed(ActionEvent e)
- 	{
-    	 
+ 	 {
+
     	 if(e.getSource() == newGameButton)
     	 {
     	  //Do stuff when user presses the new button.
@@ -123,8 +144,31 @@ public class GuessingGameGUI extends JPanel implements ActionListener {
     	 if (e.getSource() == noButton)
     	 {
     		 model.noSelection();
+    		 if(model.isQuestion())
+    		 {
+    		   this.questionLabel.setText(model.updateInfo());
+    		 }
+    		 else
+    		 {
+    		   this.answerLabel.setText(model.updateInfo());
+    		 }
     	 }
+    	 if(e.getSource() == myAnimalButton)
+    	 {
+    		 JOptionPane.showMessageDialog(this, "Excellent!");
+    	 }
+    	 if(e.getSource() == wrongGuess)
+    	 {
+    		 JOptionPane.showMessageDialog(this,"We're sorry. Buy the advanced version to add more animals!");
+    	 }
+    	 if(e.getSource() == newGameButton)
+    	 {
+    		 this.model = new GuessingGameModel();
+    		 questionUpdater();
+    		 this.answerLabel.setText("");
+    		 resetButtons();
+    	 }
+    	 checkIfEndGame();
     	 
- 	}
-     
+ 	 }    
 }
